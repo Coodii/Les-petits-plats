@@ -3,17 +3,24 @@ import {recipes} from "../scripts/recipes.js";
 
 
 let listOfRecipes = [...recipes];
+let applianceTags = [];
+let ingredientTags = [];
+let ustensilTags = [];
 let appliances = [];
 let ingredients = [];
 let ustensils = [];
 
+let filteredRecipesByTags = [];
+let reaserchListRecipes = [];
+
 const searchBar = document.getElementById('searchBar');
-searchBar.addEventListener('input', (event) => {searchElement(event,listOfRecipes)});
-
-
-let newRecipes = [];
+searchBar.addEventListener('input', (event) => {searchElement(event)});
 loadElements(recipes);
 
+
+
+
+//Load the applicances, ingredients and ustentils array.
 function loadElements(recipies){
     appliances = [];
     ingredients = [];
@@ -21,11 +28,14 @@ function loadElements(recipies){
 
     recipies.forEach(recipie =>
     {   
+        //get appliance
         let applianceToLowerCase = recipie.appliance.toLowerCase();
         if(!appliances.includes(applianceToLowerCase)){
             appliances.push(applianceToLowerCase);
         }
 
+
+        //get ingredients
         let listIngredients = recipie.ingredients;
         for( let i=0 ; i < listIngredients.length  ; i++){
             let ingredient = listIngredients[i].ingredient;
@@ -36,6 +46,7 @@ function loadElements(recipies){
             }
         }
 
+        //get usentils
         let listUstensils = recipie.ustensils;
         for( let i=0 ; i < listUstensils.length  ; i++){
             let ustensil = listUstensils[i];
@@ -52,41 +63,184 @@ function loadElements(recipies){
     ustensils.sort();
 }
 
-function searchElement(event, listRecipies){
+
+
+
+//search recipes by word
+function searchElement(event){
     let wordToFind = event.target.value.toLowerCase();
-    if(wordToFind.length < 2){
-        let newListRecipies = [];
-        listRecipies.forEach(recipie =>
+    let listRecipes = [];
+    let reaserchListRecipes = [];
+
+    if(filteredRecipesByTags.length > 0){
+        listRecipes = filteredRecipesByTags;
+    }
+    else {
+        listRecipes = [...recipes];
+    }
+    
+
+    if(wordToFind.length > 2){
+
+        listRecipes.forEach(recipe =>
             {   
-                if(recipie.name.includes(wordToFind)){
-                    if(!newListRecipies.includes(recipie)){
-                        newListRecipies.push(recipie);
+
+                let recipieName = recipe.name.toLowerCase();
+                if(recipieName.includes(wordToFind)){
+                    if(!reaserchListRecipes.includes(recipe)){
+                        reaserchListRecipes.push(recipe);
                     }
                 }
 
-                let listIngredients = recipie.ingredients;
+                let listIngredients = recipe.ingredients;
                 for(let i=0 ; i < listIngredients.length  ; i++){
                     let ingredient = listIngredients[i].ingredient;
                     if(!ingredient.includes(wordToFind)){
-                        if(!newListRecipies.includes){
-                            newListRecipies.push(recipie); 
+                        if(!reaserchListRecipes.includes){
+                            reaserchListRecipes.push(recipe); 
                         }
                     }
                 }
                 
-                let description = recipie.description
+                let description = recipe.description
                     if(description.includes(wordToFind)){
-                    if(!newListRecipies.includes(recipie)){
-                        newListRecipies.push(recipie); 
+                    if(!reaserchListRecipes.includes(recipe)){
+                        reaserchListRecipes.push(recipe); 
                     }
                 }
             });
-        loadElements(newListRecipies);
-        console.log(appliances);
-        listOfRecipes = listRecipies;
-        console.log(listOfRecipes);  
+            
+            if(reaserchListRecipes.length > 0){
+                loadElements(reaserchListRecipes);
+                listOfRecipes = reaserchListRecipes;
+            }
+
+            else{
+                alert('Pas de plat trouvé');
+            }
+            
+    }
+
+    else {
+        loadElements(listRecipes);
+        listOfRecipes = listRecipes;
+    }
+
+    console.log(ustensils);
+    console.log(reaserchListRecipes);
+    
+}
+
+
+
+
+//return list by Tags
+function filterByTag(){
+    let newListRecipes = [];
+    let listRecipes = [];
+    
+    if(reaserchListRecipes.length > 0){
+        listRecipes = reaserchListRecipes;
+    }
+    else {
+        listRecipes = [...recipes];
+    }   
+    
+    //check if applianceTags exists
+    if(applianceTags.length > 0){
+        applianceTags.forEach(applianceTags =>
+        {
+            listRecipes.forEach(recipe =>
+            {   
+                let appliance = recipe.appliance.toLowerCase();
+                if(appliance.includes(applianceTags)){
+                    newListRecipes.push(recipe); 
+                }
+            })
+        });
+    }
+    
+    // check if ingredientTags exists
+    if (ingredientTags.length > 0) {
+        ingredientTags.forEach(ingredientTags =>
+        {
+            listRecipes.forEach(recipe =>
+                {
+                    let listIngredients = recipe.ingredients;
+                    for(let i=0 ; i < listIngredients.length  ; i++){
+                        let ingredient = listIngredients[i].ingredient;
+                        if(ingredient.includes(ingredientTags)){
+                            if(!newListRecipes.includes(ingredient)){
+                                newListRecipes.push(recipe); 
+                            }
+                    }
+                }
+                })
+        });
+    }
+
+
+    //check if ustensilTags exists
+    if (ustensilTags.length > 0) {
+        ustensilTags.forEach(ustensilTag =>
+        {
+            listRecipes.forEach(recipe =>
+                {
+                    let ustensil = recipe.ustensil;
+                    if(ustensil.includes(ustensilTag)){
+                    if(!newListRecipes.includes){
+                        newListRecipes.push(recipe); 
+                    }
+                }
+                })
+        });
+    }
+
+    if(newListRecipes.length > 0){
+        loadElements(newListRecipes);
+        filteredRecipesByTags = newListRecipes;
+        listOfRecipes = filteredRecipesByTags;
+    }
+    
+    else{
+        loadElements(listRecipes);
+        listOfRecipes = listOfRecipes;
     }
 }
 
 
-console.log(appliances);
+
+function removeTag(tag){
+    let index;
+    switch (tag.type){
+        case 'appliance':
+            index = applianceTags.indexOf(tag.name);
+            applianceTags.splice(index, 1);
+            break;
+        
+        case 'ustensil':
+            index = ustensilTags.indexOf(tag.name);
+            ustensilTags.splice(index, 1);
+            break;
+        
+        case 'ingredient':
+            index = ingredientTags.indexOf(tag.name);
+            ingredientTags.splice(index, 1);
+            break;
+    }
+
+    
+    filterByTag();
+}
+
+
+ingredientTags.push('tomate');
+filterByTag();
+reaserchListRecipes = filteredRecipesByTags;
+console.log(reaserchListRecipes);
+console.log(filteredRecipesByTags);
+console.log(ustensils);
+const tag = {type:'ingredient',name:'tomate'};
+removeTag(tag);
+console.log(listOfRecipes);
+console.log(ustensils);
