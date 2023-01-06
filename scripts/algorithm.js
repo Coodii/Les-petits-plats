@@ -1,4 +1,5 @@
 import {recipes} from "../scripts/recipes.js";
+import {recipeFactory} from "../scripts/recipeFactory.js";
 
 
 
@@ -16,7 +17,7 @@ let reaserchListRecipes = [];
 const searchBar = document.getElementById('searchBar');
 searchBar.addEventListener('input', (event) => {searchElement(event)});
 loadElements(recipes);
-
+addToDOM();
 
 
 
@@ -113,6 +114,7 @@ function searchElement(event){
             if(reaserchListRecipes.length > 0){
                 loadElements(reaserchListRecipes);
                 listOfRecipes = reaserchListRecipes;
+                addToDOM();
             }
 
             else{
@@ -124,6 +126,7 @@ function searchElement(event){
     else {
         loadElements(listRecipes);
         listOfRecipes = listRecipes;
+        addToDOM();
     }
 
     console.log(ustensils);
@@ -233,14 +236,24 @@ function removeTag(tag){
     filterByTag();
 }
 
+function addToDOM(){
+    const searchOuput = document.getElementById('searchResult');
+    searchOuput.innerHTML = '';
+    listOfRecipes.forEach(recipe => {
+        const recipeModel = recipeFactory(recipe);
+        const recipeCard = recipeModel.getRecipeCardDom();
+        searchOuput.appendChild(recipeCard);
+    });
+}
 
-ingredientTags.push('tomate');
-filterByTag();
-reaserchListRecipes = filteredRecipesByTags;
-console.log(reaserchListRecipes);
-console.log(filteredRecipesByTags);
-console.log(ustensils);
-const tag = {type:'ingredient',name:'tomate'};
-removeTag(tag);
-console.log(listOfRecipes);
-console.log(ustensils);
+
+// ingredientTags.push('tomate');
+// filterByTag();
+// reaserchListRecipes = filteredRecipesByTags;
+// console.log(reaserchListRecipes);
+// console.log(filteredRecipesByTags);
+// console.log(ustensils);
+// const tag = {type:'ingredient',name:'tomate'};
+// removeTag(tag);
+// console.log(listOfRecipes);
+// console.log(ustensils);
