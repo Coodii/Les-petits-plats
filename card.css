@@ -1,12 +1,13 @@
 #searchResult{
+    padding-top: 70px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 70px;
+    gap: 50px;
 }
 
 .recipe{
     height: 300px;
-    padding-top: 30px;
+    padding-top: 20px;
 }
 
 .fakeImg{
@@ -71,5 +72,4 @@
     display: -webkit-box;
     -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
-   
 }

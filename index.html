@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="index.css"/>
     <link rel="stylesheet" type="text/css" href="card.css"/>
+    <link rel="stylesheet" type="text/css" href="buttons.css"/>
     <title>Les petits plats</title>
   </head>
   <body>
@@ -14,6 +15,12 @@
         <div class="research">
           <input type="search" id="searchBar" placeholder="Rechercher une recette">
           <img id="searchButton" src="images/search.png" alt="search">
+        </div>
+        <div class='filterButtons'>
+          <div  id='ingredientsDivButton' class = 'ingredientsDivButton filter'>
+              <button id= 'ingredientsButton' class = 'button'>Ingredients</button>
+              <img class="downArrow" alt="downArrow" src="images/downArrow.png"/>
+          </div>
         </div>
         <div id="searchResult"></div>
     </main>

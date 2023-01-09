@@ -14,10 +14,16 @@ let ustensils = [];
 let filteredRecipesByTags = [];
 let reaserchListRecipes = [];
 
-const searchBar = document.getElementById('searchBar');
-searchBar.addEventListener('input', (event) => {searchElement(event)});
+
+
 loadElements(recipes);
 addToDOM();
+const searchBar = document.getElementById('searchBar');
+const ingredientsButton = document.getElementById('ingredientsButton');
+const ingredientsDiv = document.getElementById('ingredientsDivButton');
+const filterButtons = document.getElementsByClassName('filterButtons')[0];
+ingredientsButton.addEventListener('click', function(){getIngredients(ingredientsButton, ingredientsDiv, 'ingredient', ingredients)});
+searchBar.addEventListener('input', (event) => {searchElement(event)});
 
 
 
@@ -147,7 +153,7 @@ function filterByTag(){
     }
     else {
         listRecipes = [...recipes];
-    }   
+    }
     
     //check if applianceTags exists
     if(applianceTags.length > 0){
@@ -171,8 +177,10 @@ function filterByTag(){
                 {
                     let listIngredients = recipe.ingredients;
                     for(let i=0 ; i < listIngredients.length  ; i++){
-                        let ingredient = listIngredients[i].ingredient;
+                        let ingredient = listIngredients[i].ingredient.toLowerCase();
+                        
                         if(ingredient.includes(ingredientTags)){
+                            console.log(ingredient);
                             if(!newListRecipes.includes(ingredient)){
                                 newListRecipes.push(recipe); 
                             }
@@ -209,6 +217,8 @@ function filterByTag(){
         loadElements(listRecipes);
         listOfRecipes = listOfRecipes;
     }
+
+    addToDOM();
 }
 
 
@@ -246,6 +256,53 @@ function addToDOM(){
     });
 }
 
+
+function getIngredients(buttonDiv, button, type, listOfElement){
+    ingredientsDiv.style.animation = '2s increaseSize forwards';
+    buttonDiv.innerText = 'Rechercher un ' + type
+    const listElements = document.createElement('div');
+    button.appendChild(listElements);
+    listElements.setAttribute('class','listButtons');
+    for (let i =0; i < listOfElement.length; i++){
+        const element = document.createElement('p');
+        element.setAttribute('tag', type);
+        element.setAttribute('name', listOfElement[i]);
+        element.addEventListener('click', function(){addATag(listOfElement[i],type,button,listElements,buttonDiv)})
+        element.innerText = listOfElement[i];
+        listElements.appendChild(element);
+    }
+}
+
+function addATag(elementName, type, button, listElements, buttonDiv){
+    const tag = document.createElement('div');
+    tag.setAttribute('class', 'elementName button');
+    const text = document.createElement('p');
+    text.innerText = elementName;
+    tag.appendChild(text);
+    let color;
+    switch (type){
+        case 'appliance':
+            color = '#68D9A4';
+            applianceTags.push(elementName);
+
+            break;
+        case 'ustensil':
+            color = '#ED6454';
+            ustensilTags.push(elementName);
+            break;
+        
+        case 'ingredient':
+            color = '#3282F7';
+            ingredientTags.push(elementName);
+            break;
+    }
+    tag.style.backgroundColor = color;
+    filterButtons.appendChild(tag);
+    button.removeChild(listElements);
+    button.style.animation = '2s increaseSize reverse forwards';
+    buttonDiv.innerText = type;
+    filterByTag();
+}
 
 // ingredientTags.push('tomate');
 // filterByTag();

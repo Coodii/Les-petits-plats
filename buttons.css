@@ -1,0 +1,57 @@
+.filterButtons{
+    position: absolute;
+    padding-top: 20px;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    z-index: 9999;
+}
+
+.filter{
+    padding-left: 10px;
+    width: 15%;
+    position: relative;
+    height: 50px;
+    border-radius: 5px 5px 5px 5px;
+}
+
+.ingredientsDivButton{
+    background-color: #3282F7;
+}
+
+.downArrow{
+    position: absolute;
+    right: 7%;
+    top: 17px;
+}
+
+.button{
+    border: none;
+    width: 80%;
+    background-color: rgba(0, 0, 0, 0);
+    color: white;
+    font-size: 16px;
+    padding-top: 15px;
+}
+
+.listButtons{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    background-color: rgba(0, 0, 0, 0);
+    color: white;
+    overflow: hidden;
+}
+
+.elementName{
+    width: 15%;
+    height: 50px;
+    border-radius: 5px 5px 5px 5px;
+    text-align: center;
+    vertical-align: middle;
+    padding: 0px;   
+}
+
+@keyframes increaseSize {
+    from {width: 15%; height: 50px;}
+    to {width: 30%; height: auto;}
+  }
