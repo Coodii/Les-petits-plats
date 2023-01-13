@@ -88,7 +88,6 @@ function searchElement(event){
     
 
     if(wordToFind.length > 2){
-
         listRecipes.forEach(recipe =>
             {   
 
@@ -101,9 +100,9 @@ function searchElement(event){
 
                 let listIngredients = recipe.ingredients;
                 for(let i=0 ; i < listIngredients.length  ; i++){
-                    let ingredient = listIngredients[i].ingredient;
-                    if(!ingredient.includes(wordToFind)){
-                        if(!reaserchListRecipes.includes){
+                    let ingredient = listIngredients[i].ingredient.toLowerCase();
+                    if(ingredient.includes(wordToFind)){
+                        if(!reaserchListRecipes.includes(recipe)){
                             reaserchListRecipes.push(recipe); 
                         }
                     }
