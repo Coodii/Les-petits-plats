@@ -7,6 +7,13 @@
     z-index: 9999;
 }
 
+.filterResult{
+    width: 100%;
+    padding-top: 20px;
+    display: flex;
+    flex-direction: row;
+}
+
 .filter{
     padding-left: 10px;
     width: 15%;
@@ -17,6 +24,15 @@
 
 .ingredientsDivButton{
     background-color: #3282F7;
+}
+
+.ustensilsDivButton{
+    background-color: #ED6454;
+}
+
+.appliancesDivButton{
+    background-color: #68D9A4;
+    
 }
 
 .downArrow{
@@ -40,15 +56,6 @@
     background-color: rgba(0, 0, 0, 0);
     color: white;
     overflow: hidden;
-}
-
-.elementName{
-    width: 15%;
-    height: 50px;
-    border-radius: 5px 5px 5px 5px;
-    text-align: center;
-    vertical-align: middle;
-    padding: 0px;   
 }
 
 @keyframes increaseSize {
