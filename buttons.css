@@ -23,14 +23,17 @@
 }
 
 .ingredientsDivButton{
+    margin-left: 20px;
     background-color: #3282F7;
 }
 
 .ustensilsDivButton{
+    margin-left: 20px;
     background-color: #ED6454;
 }
 
 .appliancesDivButton{
+    margin-left: 20px;
     background-color: #68D9A4;
     
 }

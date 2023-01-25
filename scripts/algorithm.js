@@ -15,9 +15,11 @@ let filteredRecipesByTags = [];
 let reaserchListRecipes = [];
 
 
-
+//init the list of the appliances/recipes/ingredients
 loadElements(recipes);
 addToDOM();
+
+//get all the important elements to use in the functions
 const searchBar = document.getElementById('searchBar');
 const ingredientsButton = document.getElementById('ingredientsButton');
 const ingredientsDiv = document.getElementById('ingredientsDivButton');
@@ -33,7 +35,11 @@ searchBar.addEventListener('input', (event) => {searchElement(event)});
 
 
 
-//Load the applicances, ingredients and ustentils array.
+/** 
+   * This function refreshes the list of the appliances, ingredients and ustensils in alphabetic order.
+   * @param recipies List of the current recipes
+   * 
+*/
 function loadElements(recipies){
     appliances = [];
     ingredients = [];
@@ -79,12 +85,22 @@ function loadElements(recipies){
 
 
 
-//search recipes by word
+/** 
+   * This function will get a list of recipes. It will iterates through the ingredients of the recipes,
+   * their name and their description.
+   * @param event The current input of the research bar
+   * 
+*/
 function searchElement(event){
+
     let wordToFind = event.target.value.toLowerCase();
+    
+    //reset list
     let listRecipes = [];
     reaserchListRecipes = [];
 
+    //if tags exist, the code will take the list of recipes coming from the filterTag function
+    //else it will take the 50 ingrendients
     if(filteredRecipesByTags.length > 0){
         listRecipes = filteredRecipesByTags;
     }
@@ -92,7 +108,7 @@ function searchElement(event){
         listRecipes = [...recipes];
     }
     
-
+    // if the character length of the input is longer than 2, we start the resesarch
     if(wordToFind.length > 2){
         listRecipes.forEach(recipe =>
             {   
@@ -122,34 +138,46 @@ function searchElement(event){
                 }
             });
             
+
+            //if the number of recipes is bigger than 0, we will refresh the list of appliances,ingredients,
+            //ustensils with the new list of recipes and display the recipes
             if(reaserchListRecipes.length > 0){
                 loadElements(reaserchListRecipes);
                 listOfRecipes = reaserchListRecipes;
                 addToDOM();
             }
 
+            // if not result found, we will display a message
             else{
                 alert('Pas de plat trouvé');
             }
             
     }
 
+    //if the number of input characters is smaller than 2 then we refresh the list of appliances, ingredients...
+    //and display the correct recipes
     else {
         loadElements(listRecipes);
         listOfRecipes = listRecipes;
         addToDOM();
     }
-    
 }
 
 
 
 
-//return list by Tags
+/** 
+   * This function will get a list of recipes with the tags. It will iterates through the ingredients of the recipes,
+   * their appliances and their ustensils.
+   * 
+*/
 function filterByTag(){
+    //refresh list
     let newListRecipes = [];
     let listRecipes = [];
     
+    //if the length of the recipes coming from the researchList, we will take this list
+    //else we take the 50 ingredients
     if(reaserchListRecipes.length > 0){
         listRecipes = reaserchListRecipes;
     }
@@ -157,31 +185,36 @@ function filterByTag(){
         listRecipes = [...recipes];
     }
     
-    
+    //iterates through the list of recipes
     listRecipes.forEach(recipe =>
     { 
         let recipeToAdd = true;
         //check if applianceTags exists
         if(applianceTags.length > 0){
+            // iniate the number of appliances to find
             let appliancesFound = 0;
+            // iniate the number of appliances to get with the number of tags
             let appliancesToFound = applianceTags.length;
                 let appliance = recipe.appliance.toLowerCase();
                 for(let i=0; i < applianceTags.length; i++){
                     let applianceTag = applianceTags[i];
+                    //if the appliance is found, increase the number of appliancesToFound by 1
                     if(appliance.includes(applianceTag)){
                         appliancesFound += 1;
                         break;
                     }    
                 }
+            
+            //if the number of appliances found is not equal to the to the number of appliances to found
+            // we will not add the recipes to the list.
             if(appliancesToFound != appliancesFound){
                 recipeToAdd = false;
-                console.log(recipe);
             }
         }
         
 
     
-        // check if ingredientTags exists
+        //doing the same treatments than the appliances
         if (ingredientTags.length > 0) {
             let listIngredients = recipe.ingredients;
             let ingredientsFounds = 0;
@@ -197,16 +230,15 @@ function filterByTag(){
                 }
             }
             if(ingredientsToFound != ingredientsFounds){
-                console.log(listOfRecipes);
                 recipeToAdd = false;
             }
         }
 
 
-        //check if ustensilTags exists
+        //doing the same treatments than the appliances
         if(ustensilTags.length > 0){
             let ustensilsFound = 0;
-            let ustensilsToFound = applianceTags.length;
+            let ustensilsToFound = ustensilTags.length;
             for(let i=0; i < recipe.ustensils.length; i++){
                 let ustensil = recipe.ustensils[i].toLowerCase();
                 for(let i=0; i < ustensilTags.length; i++){
@@ -217,41 +249,50 @@ function filterByTag(){
                     }    
                 }
             }
-            if(ustensilsFound == ustensilsToFound){
-                
+            if(ustensilsToFound != ustensilsFound){
                 recipeToAdd = false;
             }
         }
 
+        //if the recipe get all the tags, we will add it
         if(recipeToAdd == true){
             newListRecipes.push(recipe);
         }
     
     });
 
+    //if the list of recipes found is bigger than 0, we will refresh the list of ustensils, ingredients and appliances
     if(newListRecipes.length > 0){
         loadElements(newListRecipes);
         filteredRecipesByTags = newListRecipes;
         listOfRecipes = filteredRecipesByTags;
-        console.log('toto');
     }
     
     else{
-        console.log(newListRecipe);
+        filteredRecipesByTags = [];
         loadElements(listRecipes);
         listOfRecipes = listRecipes;
     }
 
+    //display the new recipes
     addToDOM();
 }
 
 
 
+/** 
+   * This function will remove the tag
+   * @param elementName The name of the tag
+   * @param type The type of the tag (appliance/ingredient/usensils)
+   * 
+*/
 function removeTag(elementName, type){
     let index;
     switch (type){
         case 'appliance':
+            //get the index of the element with the name of the element
             index = applianceTags.indexOf(elementName);
+            //remove the element from the list
             applianceTags.splice(index, 1);
             break;
         
@@ -266,15 +307,23 @@ function removeTag(elementName, type){
             break;
     }
 
-    
+    //call the function to filter by tag
     filterByTag();
+
+    //remove the element from the page
     const elementToRemove = document.getElementById(elementName);
     filterResult.removeChild(elementToRemove);
 }
 
+
+/** 
+   * This function will add the recipes to the page
+   * 
+*/
 function addToDOM(){
     const searchOuput = document.getElementById('searchResult');
     searchOuput.innerHTML = '';
+    //iterate trough the recipes and use the factory to create the elements
     listOfRecipes.forEach(recipe => {
         const recipeModel = recipeFactory(recipe);
         const recipeCard = recipeModel.getRecipeCardDom();
@@ -283,6 +332,16 @@ function addToDOM(){
 }
 
 
+
+/** 
+   * This function will be executed on the click of the ingredients/appliances/ustensils button.
+   * The list of the matching will pop up
+   * @param buttonDiv The div of the button
+   * @param button The current button
+   * @param type The type of the button
+   * @param listOfElement The list of all the element type
+   *  
+*/
 function getFilter(buttonDiv, button, type, listOfElement){
     button.style.animation = '2s increaseSize forwards';
     buttonDiv.innerText = 'Rechercher un ' + type
@@ -299,6 +358,16 @@ function getFilter(buttonDiv, button, type, listOfElement){
     }
 }
 
+
+/** 
+   * This function will be executed on the click of the ingredient/appliance/ustensil button.
+   * The filter will be added to the page
+   * @param elementName The name of the tag
+   * @param type The type of tag
+   * @param button The 
+   * @param listOfElement The list of all the element type
+   *  
+*/
 function addATag(elementName, type, button, listElements, buttonDiv){
     const tag = document.createElement('div');
     tag.setAttribute('class', 'filter');
@@ -336,3 +405,4 @@ function addATag(elementName, type, button, listElements, buttonDiv){
     buttonDiv.innerText = type;
     filterByTag();
 }
+
