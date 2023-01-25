@@ -343,8 +343,23 @@ function addToDOM(){
    *  
 */
 function getFilter(buttonDiv, button, type, listOfElement){
-    button.style.animation = '2s increaseSize forwards';
-    buttonDiv.innerText = 'Rechercher un ' + type
+    button.style.animation = '1s increaseSize forwards';
+    let buttonDivText;
+    switch (type){
+        case 'appliance':
+            buttonDivText = 'appareil';
+            break;
+
+        case 'ustensil':
+            color = '#ED6454';
+            buttonDivText = 'ustensile';
+            break;
+        
+        case 'ingredient':
+            buttonDivText = 'ingrédient';
+            break;
+    }
+    buttonDiv.innerText = 'Rechercher un ' + buttonDivText
     const listElements = document.createElement('div');
     button.appendChild(listElements);
     listElements.setAttribute('class','listButtons');
@@ -364,17 +379,18 @@ function getFilter(buttonDiv, button, type, listOfElement){
    * The filter will be added to the page
    * @param elementName The name of the tag
    * @param type The type of tag
-   * @param button The 
+   * @param button The button
    * @param listOfElement The list of all the element type
+   * @param buttonDiv The div of the button
    *  
 */
 function addATag(elementName, type, button, listElements, buttonDiv){
     const tag = document.createElement('div');
     tag.setAttribute('class', 'filter');
     tag.setAttribute('id', elementName);
-    const text = document.createElement('btn');
+    const text = document.createElement('p');
     text.innerText = elementName;
-    text.setAttribute('class', 'button');
+    text.setAttribute('class', 'text');
     tag.appendChild(text);
     const removeButton = document.createElement('img');
     removeButton.setAttribute('src', 'images/close.png');
@@ -382,27 +398,31 @@ function addATag(elementName, type, button, listElements, buttonDiv){
     removeButton.addEventListener('click', function(){removeTag(elementName,type)})
     tag.appendChild(removeButton);
     let color;
+    let buttonDivText;
     switch (type){
         case 'appliance':
             color = '#68D9A4';
+            buttonDivText = 'Appareil';
             applianceTags.push(elementName);
 
             break;
         case 'ustensil':
             color = '#ED6454';
+            buttonDivText = 'Ustensiles';
             ustensilTags.push(elementName);
             break;
         
         case 'ingredient':
             color = '#3282F7';
+            buttonDivText = 'Ingrédient';
             ingredientTags.push(elementName);
             break;
     }
     tag.style.backgroundColor = color;
     filterResult.appendChild(tag);
     button.removeChild(listElements);
-    button.style.animation = '2s increaseSize reverse forwards';
-    buttonDiv.innerText = type;
+    button.style.animation = '1s decreaseSize forwards';
+    buttonDiv.innerText = buttonDivText;
     filterByTag();
 }
 

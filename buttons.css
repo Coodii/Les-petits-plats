@@ -15,6 +15,7 @@
 }
 
 .filter{
+    margin-left: 20px;
     padding-left: 10px;
     width: 15%;
     position: relative;
@@ -23,19 +24,15 @@
 }
 
 .ingredientsDivButton{
-    margin-left: 20px;
     background-color: #3282F7;
 }
 
 .ustensilsDivButton{
-    margin-left: 20px;
     background-color: #ED6454;
 }
 
 .appliancesDivButton{
-    margin-left: 20px;
     background-color: #68D9A4;
-    
 }
 
 .downArrow{
@@ -61,7 +58,19 @@
     overflow: hidden;
 }
 
+.text{
+    font-size: 17px;
+    color: white;
+    left: 30%;
+    position: absolute;
+}
+
 @keyframes increaseSize {
-    from {width: 15%; height: 50px;}
+    from {width: 15%; height: auto;}
     to {width: 30%; height: auto;}
-  }
+}
+
+@keyframes decreaseSize {
+    from {width: 30%; height: auto;}
+    to {width: 15%; height: 50px;}
+}
