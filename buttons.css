@@ -23,15 +23,15 @@
     border-radius: 5px 5px 5px 5px;
 }
 
-.ingredientsDivButton{
+.ingredientsDiv{
     background-color: #3282F7;
 }
 
-.ustensilsDivButton{
+.ustensilsDiv{
     background-color: #ED6454;
 }
 
-.appliancesDivButton{
+.appliancesDiv{
     background-color: #68D9A4;
 }
 
@@ -63,6 +63,14 @@
     color: white;
     left: 30%;
     position: absolute;
+}
+
+textarea:focus, input:focus{
+    outline: none;
+}
+
+[hide='true']{
+    display: none;
 }
 
 @keyframes increaseSize {

@@ -21,16 +21,19 @@ addToDOM();
 
 //get all the important elements to use in the functions
 const searchBar = document.getElementById('searchBar');
-const ingredientsButton = document.getElementById('ingredientsButton');
-const ingredientsDiv = document.getElementById('ingredientsDivButton');
-const ustensilsButton = document.getElementById('ustensilsButton');
-const ustensilsDiv = document.getElementById('ustensilsDivButton');
-const appliancesButton = document.getElementById('appliancesButton');
-const appliancesDiv = document.getElementById('appliancesDivButton');
+const ingredientsInput = document.getElementById('ingredientsInput');
+const ingredientsDiv = document.getElementById('ingredientsDiv');
+const ustensilsInput = document.getElementById('ustensilsInput');
+const ustensilsDiv = document.getElementById('ustensilsDiv');
+const appliancesInput = document.getElementById('appliancesInput');
+const appliancesDiv = document.getElementById('appliancesDiv');
 const filterResult = document.getElementsByClassName('filterResult')[0];
-ingredientsButton.addEventListener('click', function(){getFilter(ingredientsButton, ingredientsDiv, 'ingredient', ingredients)});
-ustensilsButton.addEventListener('click', function(){getFilter(ustensilsButton, ustensilsDiv, 'ustensil', ustensils)});
-appliancesButton.addEventListener('click', function(){getFilter(appliancesButton, appliancesDiv, 'appliance', appliances)});
+ingredientsInput.addEventListener('click', function(){getFilter(ingredientsInput, ingredientsDiv, 'ingredient', ingredients)});
+ustensilsInput.addEventListener('click', function(){getFilter(ustensilsInput, ustensilsDiv, 'ustensil', ustensils)});
+appliancesInput.addEventListener('click', function(){getFilter(appliancesInput, appliancesDiv, 'appliance', appliances)});
+ingredientsInput.addEventListener('input', (event) => {filterButtonList(event, 'ingredient')});
+ustensilsInput.addEventListener('input', (event) => {filterButtonList(event, 'ustensil')});
+appliancesInput.addEventListener('input', (event) => {filterButtonList(event, 'appliance')});
 searchBar.addEventListener('input', (event) => {searchElement(event)});
 
 
@@ -112,28 +115,36 @@ function searchElement(event){
     if(wordToFind.length > 2){
         listRecipes.forEach(recipe =>
             {   
+                let recipeFound = false;
 
                 let recipieName = recipe.name.toLowerCase();
                 if(recipieName.includes(wordToFind)){
                     if(!reaserchListRecipes.includes(recipe)){
                         reaserchListRecipes.push(recipe);
+                        recipeFound = true;
                     }
                 }
 
-                let listIngredients = recipe.ingredients;
-                for(let i=0 ; i < listIngredients.length  ; i++){
-                    let ingredient = listIngredients[i].ingredient.toLowerCase();
-                    if(ingredient.includes(wordToFind)){
-                        if(!reaserchListRecipes.includes(recipe)){
-                            reaserchListRecipes.push(recipe); 
+                if(!recipeFound){
+                    let listIngredients = recipe.ingredients;
+                    for(let i=0 ; i < listIngredients.length  ; i++){
+                        let ingredient = listIngredients[i].ingredient.toLowerCase();
+                        if(ingredient.includes(wordToFind)){
+                            if(!reaserchListRecipes.includes(recipe)){
+                                reaserchListRecipes.push(recipe); 
+                            }
+                            recipeFound = true;
+                            break;
                         }
                     }
                 }
                 
-                let description = recipe.description
-                    if(description.includes(wordToFind)){
-                    if(!reaserchListRecipes.includes(recipe)){
-                        reaserchListRecipes.push(recipe); 
+                if(!recipeFound){
+                    let description = recipe.description
+                        if(description.includes(wordToFind)){
+                        if(!reaserchListRecipes.includes(recipe)){
+                            reaserchListRecipes.push(recipe); 
+                        }
                     }
                 }
             });
@@ -157,9 +168,7 @@ function searchElement(event){
     //if the number of input characters is smaller than 2 then we refresh the list of appliances, ingredients...
     //and display the correct recipes
     else {
-        loadElements(listRecipes);
-        listOfRecipes = listRecipes;
-        addToDOM();
+        filterByTag();
     }
 }
 
@@ -336,41 +345,32 @@ function addToDOM(){
 /** 
    * This function will be executed on the click of the ingredients/appliances/ustensils button.
    * The list of the matching will pop up
-   * @param buttonDiv The div of the button
-   * @param button The current button
+   * @param input The input 
+   * @param div The div containing the elements
    * @param type The type of the button
    * @param listOfElement The list of all the element type
    *  
 */
-function getFilter(buttonDiv, button, type, listOfElement){
-    button.style.animation = '1s increaseSize forwards';
-    let buttonDivText;
-    switch (type){
-        case 'appliance':
-            buttonDivText = 'appareil';
-            break;
-
-        case 'ustensil':
-            color = '#ED6454';
-            buttonDivText = 'ustensile';
-            break;
-        
-        case 'ingredient':
-            buttonDivText = 'ingrédient';
-            break;
+function getFilter(input, div, type, listOfElement){
+    let open = div.getAttribute('open');
+    if(open === 'false'){
+        div.setAttribute('open','true');
+        div.style.animation = '1s increaseSize forwards';
+        input.value = '';
+        const listElements = document.createElement('div');
+        div.appendChild(listElements);
+        listElements.setAttribute('class','listButtons');
+        for (let i =0; i < listOfElement.length; i++){
+            const element = document.createElement('p');
+            element.setAttribute('tag', type);
+            element.setAttribute('name', listOfElement[i]);
+            element.setAttribute('hide', 'false');
+            element.addEventListener('click', function(){addATag(listOfElement[i],type,div,listElements,input)})
+            element.innerText = listOfElement[i];
+            listElements.appendChild(element);
+        }
     }
-    buttonDiv.innerText = 'Rechercher un ' + buttonDivText
-    const listElements = document.createElement('div');
-    button.appendChild(listElements);
-    listElements.setAttribute('class','listButtons');
-    for (let i =0; i < listOfElement.length; i++){
-        const element = document.createElement('p');
-        element.setAttribute('tag', type);
-        element.setAttribute('name', listOfElement[i]);
-        element.addEventListener('click', function(){addATag(listOfElement[i],type,button,listElements,buttonDiv)})
-        element.innerText = listOfElement[i];
-        listElements.appendChild(element);
-    }
+    
 }
 
 
@@ -379,12 +379,12 @@ function getFilter(buttonDiv, button, type, listOfElement){
    * The filter will be added to the page
    * @param elementName The name of the tag
    * @param type The type of tag
-   * @param button The button
+   * @param div The div containing the elements
    * @param listOfElement The list of all the element type
-   * @param buttonDiv The div of the button
+   * @param input The input
    *  
 */
-function addATag(elementName, type, button, listElements, buttonDiv){
+function addATag(elementName, type, div, listElements, input){
     const tag = document.createElement('div');
     tag.setAttribute('class', 'filter');
     tag.setAttribute('id', elementName);
@@ -398,31 +398,53 @@ function addATag(elementName, type, button, listElements, buttonDiv){
     removeButton.addEventListener('click', function(){removeTag(elementName,type)})
     tag.appendChild(removeButton);
     let color;
-    let buttonDivText;
+    let inputText;
     switch (type){
         case 'appliance':
             color = '#68D9A4';
-            buttonDivText = 'Appareil';
+            inputText = 'Appareils';
             applianceTags.push(elementName);
 
             break;
         case 'ustensil':
             color = '#ED6454';
-            buttonDivText = 'Ustensiles';
+            inputText = 'Ustensiles';
             ustensilTags.push(elementName);
             break;
         
         case 'ingredient':
             color = '#3282F7';
-            buttonDivText = 'Ingrédient';
+            inputText = 'Ingredient';
             ingredientTags.push(elementName);
             break;
     }
     tag.style.backgroundColor = color;
     filterResult.appendChild(tag);
-    button.removeChild(listElements);
-    button.style.animation = '1s decreaseSize forwards';
-    buttonDiv.innerText = buttonDivText;
+    div.removeChild(listElements);
+    div.style.animation = '1s decreaseSize forwards';
+    div.setAttribute('open','false');
+    input.value = inputText;
     filterByTag();
+}
+
+
+
+function filterButtonList(event, type){
+    let wordToFind = event.target.value.toLowerCase();
+    const elementsToHide = document.querySelectorAll('[tag="'+type+'"]');
+    const regex = new RegExp('^'+wordToFind)
+    if(wordToFind.length > 0){
+        elementsToHide.forEach(element => {
+            let name = element.getAttribute('name');
+            if(!name.match(regex)){
+                element.setAttribute('hide', 'true');
+            }
+        });
+    }
+    else{
+        elementsToHide.forEach(element => {
+            element.setAttribute('hide', 'false');
+        });
+    }
 }
 
