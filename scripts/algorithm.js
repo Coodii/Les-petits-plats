@@ -101,7 +101,7 @@ function searchElement(event){
     //reset list
     let listRecipes = [];
     reaserchListRecipes = [];
-
+    let mapListRecipes = new Map();
     //if tags exist, the code will take the list of recipes coming from the filterTag function
     //else it will take the 50 ingrendients
     if(filteredRecipesByTags.length > 0){
@@ -113,55 +113,42 @@ function searchElement(event){
     
     // if the character length of the input is longer than 2, we start the resesarch
     if(wordToFind.length > 2){
+
         listRecipes.forEach(recipe =>
+            //Fill a map with the recipe as a key and the name, ingredients and description as values
             {   
-                let recipeFound = false;
-
-                let recipieName = recipe.name.toLowerCase();
-                if(recipieName.includes(wordToFind)){
-                    if(!reaserchListRecipes.includes(recipe)){
-                        reaserchListRecipes.push(recipe);
-                        recipeFound = true;
-                    }
+                let ingredientList = '';
+                let listIngredients = recipe.ingredients;
+                for(let i=0 ; i < listIngredients.length  ; i++){
+                    let ingredient = listIngredients[i].ingredient.toLowerCase();
+                    ingredientList += ' ' + ingredient;
                 }
-
-                if(!recipeFound){
-                    let listIngredients = recipe.ingredients;
-                    for(let i=0 ; i < listIngredients.length  ; i++){
-                        let ingredient = listIngredients[i].ingredient.toLowerCase();
-                        if(ingredient.includes(wordToFind)){
-                            if(!reaserchListRecipes.includes(recipe)){
-                                reaserchListRecipes.push(recipe); 
-                            }
-                            recipeFound = true;
-                            break;
-                        }
-                    }
-                }
-                
-                if(!recipeFound){
-                    let description = recipe.description
-                        if(description.includes(wordToFind)){
-                        if(!reaserchListRecipes.includes(recipe)){
-                            reaserchListRecipes.push(recipe); 
-                        }
-                    }
-                }
-            });
-            
-
-            //if the number of recipes is bigger than 0, we will refresh the list of appliances,ingredients,
-            //ustensils with the new list of recipes and display the recipes
-            if(reaserchListRecipes.length > 0){
-                loadElements(reaserchListRecipes);
-                listOfRecipes = reaserchListRecipes;
-                addToDOM();
+                mapListRecipes.set(recipe, recipe.name.toLowerCase() + ' ' + ingredientList + ' ' + recipe.description.toLowerCase());
             }
-
-            // if not result found, we will display a message
-            else{
-                alert('Pas de plat trouvé');
+        );
+        
+        //check if the word to find is in the values, if yes we had the recipe to a new list
+        for (let [key, value] of mapListRecipes.entries()) { {
+            if(value.includes(wordToFind)){
+                if(!reaserchListRecipes.includes(key)){
+                    reaserchListRecipes.push(key);
+                }
             }
+        }}
+        
+
+        //if the number of recipes is bigger than 0, we will refresh the list of appliances,ingredients,
+        //ustensils with the new list of recipes and display the recipes
+        if(reaserchListRecipes.length > 0){
+            loadElements(reaserchListRecipes);
+            listOfRecipes = reaserchListRecipes;
+            addToDOM();
+        }
+
+        // if not result found, we will display a message
+        else{
+            alert('Pas de plat trouvé');
+        }
             
     }
 
