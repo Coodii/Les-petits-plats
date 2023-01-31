@@ -1,4 +1,4 @@
-#searchResult{
+#result{
     padding-top: 70px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -72,4 +72,9 @@
     display: -webkit-box;
     -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
+}
+
+.noResult{
+    text-align: center;
+    padding-top: 100px;
 }

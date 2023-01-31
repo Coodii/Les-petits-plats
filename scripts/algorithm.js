@@ -152,16 +152,10 @@ function searchElement(event){
 
             //if the number of recipes is bigger than 0, we will refresh the list of appliances,ingredients,
             //ustensils with the new list of recipes and display the recipes
-            if(reaserchListRecipes.length > 0){
-                loadElements(reaserchListRecipes);
-                listOfRecipes = reaserchListRecipes;
-                addToDOM();
-            }
-
-            // if not result found, we will display a message
-            else{
-                alert('Pas de plat trouvé');
-            }
+            loadElements(reaserchListRecipes);
+            listOfRecipes = reaserchListRecipes;
+            addToDOM();
+    
             
     }
 
@@ -332,14 +326,26 @@ function removeTag(elementName, type){
 function addToDOM(){
     const searchOuput = document.getElementById('searchResult');
     searchOuput.innerHTML = '';
+    
     //iterate trough the recipes and use the factory to create the elements
-    listOfRecipes.forEach(recipe => {
-        const recipeModel = recipeFactory(recipe);
-        const recipeCard = recipeModel.getRecipeCardDom();
-        searchOuput.appendChild(recipeCard);
-    });
+    
+    if(listOfRecipes.length == 0){
+        const noResultFound = document.createElement('p');
+        noResultFound.innerHTML = 'Oops, nous n\'avons pas trouvé une recette pour cette recherche';
+        noResultFound.setAttribute('class','noResult');
+        searchOuput.appendChild(noResultFound);
+    }
+    else{
+        const result = document.createElement('div');
+        result.setAttribute('id', 'result');
+        listOfRecipes.forEach(recipe => {
+            const recipeModel = recipeFactory(recipe);
+            const recipeCard = recipeModel.getRecipeCardDom();
+            result.appendChild(recipeCard);
+        });
+        searchOuput.appendChild(result);
+    }
 }
-
 
 
 /** 
