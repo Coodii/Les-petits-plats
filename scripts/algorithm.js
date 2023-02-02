@@ -434,7 +434,12 @@ function addATag(elementName, type, div, listElements, input){
 }
 
 
-
+/** 
+   * This method filters the elements inside the tag button
+   * @param event The input
+   * @param type The type of tag
+   *  
+*/
 function filterButtonList(event, type){
     let wordToFind = event.target.value.toLowerCase();
     const elementsToHide = document.querySelectorAll('[tag="'+type+'"]');
