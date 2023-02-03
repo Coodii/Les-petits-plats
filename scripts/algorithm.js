@@ -344,9 +344,9 @@ function addToDOM(){
    *  
 */
 function getFilter(input, div, type, listOfElement){
-    let open = div.getAttribute('open');
+    let open = div.getAttribute('data-isOpen');
     if(open === 'false'){
-        div.setAttribute('open','true');
+        div.setAttribute('data-isOpen','true');
         div.style.animation = '1s increaseSize forwards';
         input.value = '';
         const listElements = document.createElement('div');
@@ -414,7 +414,7 @@ function addATag(elementName, type, div, listElements, input){
     filterResult.appendChild(tag);
     div.removeChild(listElements);
     div.style.animation = '1s decreaseSize forwards';
-    div.setAttribute('open','false');
+    div.setAttribute('data-isOpen','false');
     input.value = inputText;
     filterByTag();
 }
@@ -429,13 +429,13 @@ function filterButtonList(event, type){
         elementsToHide.forEach(element => {
             let name = element.getAttribute('name');
             if(!name.match(regex)){
-                element.setAttribute('hide', 'true');
+                element.setAttribute('data-hide', 'true');
             }
         });
     }
     else{
         elementsToHide.forEach(element => {
-            element.setAttribute('hide', 'false');
+            element.setAttribute('data-hide', 'false');
         });
     }
 }

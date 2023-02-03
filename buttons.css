@@ -69,7 +69,7 @@ textarea:focus, input:focus{
     outline: none;
 }
 
-[hide='true']{
+[data-hide='true']{
     display: none;
 }
 
