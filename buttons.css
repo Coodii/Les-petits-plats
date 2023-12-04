@@ -35,10 +35,14 @@
     background-color: #68D9A4;
 }
 
-.downArrow{
+.downArrow, .upArrow{
     position: absolute;
     right: 7%;
     top: 17px;
+}
+
+.upArrow {
+    transform: rotate(180deg); 
 }
 
 .button{

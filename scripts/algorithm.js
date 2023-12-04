@@ -362,6 +362,9 @@ function getFilter(input, div, type, listOfElement){
         div.setAttribute('open','true');
         div.style.animation = '1s increaseSize forwards';
         input.value = '';
+        let arrow = div.childNodes[3];
+        arrow.setAttribute('class', 'upArrow');
+        console.log(arrow)
         const listElements = document.createElement('div');
         div.appendChild(listElements);
         listElements.setAttribute('class','listButtons');
@@ -428,6 +431,8 @@ function addATag(elementName, type, div, listElements, input){
     div.removeChild(listElements);
     div.style.animation = '1s decreaseSize forwards';
     div.setAttribute('open','false');
+    let arrow = div.childNodes[3];
+    arrow.setAttribute('class', 'downArrow');
     input.value = inputText;
     filterByTag();
 }
