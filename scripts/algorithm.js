@@ -113,10 +113,9 @@ function searchElement(event){
     
     // if the character length of the input is longer than 2, we start the resesarch
     if(wordToFind.length > 2){
-        listRecipes.forEach(recipe =>
-            {   
+        for(let i=0 ; i < listRecipes.length  ; i++){
                 let recipeFound = false;
-
+                let recipe = listRecipes[i];
                 let recipieName = recipe.name.toLowerCase();
                 if(recipieName.includes(wordToFind)){
                     if(!reaserchListRecipes.includes(recipe)){
@@ -147,7 +146,7 @@ function searchElement(event){
                         }
                     }
                 }
-            });
+            }
             
 
             //if the number of recipes is bigger than 0, we will refresh the list of appliances,ingredients,
