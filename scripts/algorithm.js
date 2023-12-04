@@ -119,10 +119,12 @@ function searchElement(event){
             {   
                 let ingredientList = '';
                 let listIngredients = recipe.ingredients;
-                for(let i=0 ; i < listIngredients.length  ; i++){
-                    let ingredient = listIngredients[i].ingredient.toLowerCase();
-                    ingredientList += ' ' + ingredient;
-                }
+                listIngredients.forEach(listIngredient =>
+                    {
+                        let ingredient = listIngredient.ingredient.toLowerCase();
+                        ingredientList += ' ' + ingredient;
+                    }
+                )
                 mapListRecipes.set(recipe, recipe.name.toLowerCase() + ' ' + ingredientList + ' ' + recipe.description.toLowerCase());
             }
         );
