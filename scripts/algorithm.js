@@ -117,6 +117,7 @@ function searchElement(event){
                 let recipeFound = false;
                 let recipe = listRecipes[i];
                 let recipieName = recipe.name.toLowerCase();
+
                 if(recipieName.includes(wordToFind)){
                     if(!reaserchListRecipes.includes(recipe)){
                         reaserchListRecipes.push(recipe);
@@ -160,7 +161,7 @@ function searchElement(event){
 
     //if the number of input characters is smaller than 2 then we refresh the list of appliances, ingredients...
     //and display the correct recipes
-    else {
+    else if(filteredRecipesByTags.length > 0) {
         filterByTag();
     }
 }
@@ -203,7 +204,6 @@ function filterByTag(){
                     //if the appliance is found, increase the number of appliancesToFound by 1
                     if(appliance.includes(applianceTag)){
                         appliancesFound += 1;
-                        break;
                     }    
                 }
             
@@ -227,7 +227,6 @@ function filterByTag(){
                     let ingredientTag = ingredientTags[i];
                     if(ingredient.includes(ingredientTag)){
                         ingredientsFounds += 1;
-                        break;
                     }    
                 }
             }
@@ -247,7 +246,6 @@ function filterByTag(){
                     let ustensilTag = ustensilTags[i];
                     if(ustensil.includes(ustensilTag)){
                         ustensilsFound += 1;
-                        break;
                     }    
                 }
             }
@@ -257,7 +255,7 @@ function filterByTag(){
         }
 
         //if the recipe get all the tags, we will add it
-        if(recipeToAdd == true){
+        if(recipeToAdd){
             newListRecipes.push(recipe);
         }
     
@@ -364,7 +362,6 @@ function getFilter(input, div, type, listOfElement){
         input.value = '';
         let arrow = div.childNodes[3];
         arrow.setAttribute('class', 'upArrow');
-        console.log(arrow)
         const listElements = document.createElement('div');
         div.appendChild(listElements);
         listElements.setAttribute('class','listButtons');
@@ -393,6 +390,7 @@ function getFilter(input, div, type, listOfElement){
    *  
 */
 function addATag(elementName, type, div, listElements, input){
+    //create the tag
     const tag = document.createElement('div');
     tag.setAttribute('class', 'filter');
     tag.setAttribute('id', elementName);
@@ -400,6 +398,7 @@ function addATag(elementName, type, div, listElements, input){
     text.innerText = elementName;
     text.setAttribute('class', 'text');
     tag.appendChild(text);
+    //add remove button
     const removeButton = document.createElement('img');
     removeButton.setAttribute('src', 'images/close.png');
     removeButton.setAttribute('class','downArrow');
@@ -407,6 +406,7 @@ function addATag(elementName, type, div, listElements, input){
     tag.appendChild(removeButton);
     let color;
     let inputText;
+    //change button parameters
     switch (type){
         case 'appliance':
             color = '#68D9A4';
@@ -429,11 +429,13 @@ function addATag(elementName, type, div, listElements, input){
     tag.style.backgroundColor = color;
     filterResult.appendChild(tag);
     div.removeChild(listElements);
+    //close div
     div.style.animation = '1s decreaseSize forwards';
     div.setAttribute('open','false');
     let arrow = div.childNodes[3];
     arrow.setAttribute('class', 'downArrow');
     input.value = inputText;
+    //execute tag again
     filterByTag();
 }
 
